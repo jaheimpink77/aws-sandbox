@@ -29,10 +29,7 @@ const waHref = "https://wa.me/" + digits + "?text=" + encodeURIComponent(c.waPre
 
 /* Placeholders carried over from the design mock. Anything still matching
    these at launch is a bug, not a decision. */
-const PLACEHOLDERS = [
-  "hello@sidebysidesupport.co.uk",
-  "www.sidebysidesupport.co.uk",
-];
+const PLACEHOLDERS = ["www.sidebysidesupport.co.uk"];
 
 /* Matched by shape, not by their current value, so the script keeps working
    after the first swap. */

@@ -46,14 +46,22 @@ while any of them is still in the page, so it is worth wiring into CI.
 
 | Item | Placeholder | Where |
 | --- | --- | --- |
-| Email | `hello@sidebysidesupport.co.uk` | Footer, structured data |
 | Site URL | `https://www.sidebysidesupport.co.uk/` | Canonical, Open Graph, structured data |
 | Hero photograph | `assets/hero-*.jpg` | Unsplash stock — see **Assets** |
 
-The phone number is **confirmed**: `07337 211695`, a UK mobile, so WhatsApp carries it as
-`447337211695` and the structured data as `+447337211695`. It appears in the header, hero, CTA
-band, footer and structured data, and in four `wa.me` links — change it in `contact.json`, never
-by hand.
+> **The site URL almost certainly needs changing.** The confirmed email is on
+> `sidebysidesupportservice.com`, but the canonical URL, Open Graph tag and structured data
+> still carry the mock's `sidebysidesupport.co.uk`. Confirm the live domain with the client
+> before launch — a wrong canonical is an SEO problem, not a cosmetic one.
+
+Confirmed and already in the page:
+
+- **Phone** `07337 211695` — a UK mobile, so WhatsApp carries it as `447337211695` and the
+  structured data as `+447337211695`. Header, hero, CTA band, footer, structured data, and four
+  `wa.me` links.
+- **Email** `info@sidebysidesupportservice.com` — footer and structured data.
+
+Change either in `contact.json` and re-run `npm run contact`, never by hand.
 
 To swap them, edit `contact.json` and run:
 
