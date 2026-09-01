@@ -30,8 +30,6 @@ const waHref = "https://wa.me/" + digits + "?text=" + encodeURIComponent(c.waPre
 /* Placeholders carried over from the design mock. Anything still matching
    these at launch is a bug, not a decision. */
 const PLACEHOLDERS = [
-  "020 3918 4151",
-  "442039184151",
   "hello@sidebysidesupport.co.uk",
   "www.sidebysidesupport.co.uk",
 ];
@@ -47,7 +45,8 @@ const RULES = [
   [/"url":\s*"[^"]*"/g, `"url": "${c.siteUrl}"`],
   [/(<link rel="canonical" href=")[^"]*/g, `$1${c.siteUrl}`],
   [/(<meta property="og:url" content=")[^"]*/g, `$1${c.siteUrl}`],
-  [/\b0\d{2,4}\s\d{3,4}\s\d{3,4}\b/g, c.phone],           // the number as displayed
+  // Landline ("020 3918 4151") and mobile ("07337 211695") groupings alike.
+  [/\b0\d{2,4}\s\d{3,6}(?:\s\d{3,4})?\b/g, c.phone],
   [/(?<!["/:])\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/gi, c.email], // the address as displayed
 ];
 

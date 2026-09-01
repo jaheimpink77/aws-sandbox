@@ -46,11 +46,14 @@ while any of them is still in the page, so it is worth wiring into CI.
 
 | Item | Placeholder | Where |
 | --- | --- | --- |
-| Phone number | `020 3918 4151` | Header, hero, CTA band, footer, structured data |
-| WhatsApp number | `442039184151` | Five `wa.me` links |
 | Email | `hello@sidebysidesupport.co.uk` | Footer, structured data |
 | Site URL | `https://www.sidebysidesupport.co.uk/` | Canonical, Open Graph, structured data |
 | Hero photograph | `assets/hero-*.jpg` | Unsplash stock — see **Assets** |
+
+The phone number is **confirmed**: `07337 211695`, a UK mobile, so WhatsApp carries it as
+`447337211695` and the structured data as `+447337211695`. It appears in the header, hero, CTA
+band, footer and structured data, and in four `wa.me` links — change it in `contact.json`, never
+by hand.
 
 To swap them, edit `contact.json` and run:
 
