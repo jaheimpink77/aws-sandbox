@@ -27,9 +27,15 @@ const telHref = "tel:" + c.phone.replace(/\s/g, "");
 // encodeURIComponent leaves the apostrophe alone; encode it so the href needs no quoting care.
 const waHref = "https://wa.me/" + digits + "?text=" + encodeURIComponent(c.waPrefill).replace(/'/g, "%27");
 
-/* Placeholders carried over from the design mock. Anything still matching
-   these at launch is a bug, not a decision. */
-const PLACEHOLDERS = ["www.sidebysidesupport.co.uk"];
+/* Values from the design mock. All of them have been replaced with the
+   client's real details; if one reappears, something was reverted or
+   hand-edited. Anything matching here at launch is a bug, not a decision. */
+const PLACEHOLDERS = [
+  "020 3918 4151",
+  "442039184151",
+  "hello@sidebysidesupport.co.uk",
+  "sidebysidesupport.co.uk",
+];
 
 /* Matched by shape, not by their current value, so the script keeps working
    after the first swap. */
@@ -42,6 +48,8 @@ const RULES = [
   [/"url":\s*"[^"]*"/g, `"url": "${c.siteUrl}"`],
   [/(<link rel="canonical" href=")[^"]*/g, `$1${c.siteUrl}`],
   [/(<meta property="og:url" content=")[^"]*/g, `$1${c.siteUrl}`],
+  // og:image has to be absolute — scrapers do not resolve a relative path.
+  [/(<meta property="og:image" content=")[^"]*/g, `$1${c.siteUrl.replace(/\/$/, "")}/assets/hero-1200.jpg`],
   // Landline ("020 3918 4151") and mobile ("07337 211695") groupings alike.
   [/\b0\d{2,4}\s\d{3,6}(?:\s\d{3,4})?\b/g, c.phone],
   [/(?<!["/:])\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/gi, c.email], // the address as displayed

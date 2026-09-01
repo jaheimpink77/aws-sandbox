@@ -41,37 +41,33 @@ assets/                    logos, favicons, hero photograph
 
 ## Before launch — outstanding placeholders
 
-Every one of these came from the design mock and **must be replaced**. `npm run check` fails
-while any of them is still in the page, so it is worth wiring into CI.
+The hero photograph is the last thing from the mock still in the page. `npm run check` fails if
+any mock contact detail reappears, so it is worth wiring into CI.
 
 | Item | Placeholder | Where |
 | --- | --- | --- |
-| Site URL | `https://www.sidebysidesupport.co.uk/` | Canonical, Open Graph, structured data |
 | Hero photograph | `assets/hero-*.jpg` | Unsplash stock — see **Assets** |
 
-> **The site URL almost certainly needs changing.** The confirmed email is on
-> `sidebysidesupportservice.com`, but the canonical URL, Open Graph tag and structured data
-> still carry the mock's `sidebysidesupport.co.uk`. Confirm the live domain with the client
-> before launch — a wrong canonical is an SEO problem, not a cosmetic one.
-
-Confirmed and already in the page:
+Every contact detail is now the client's real one:
 
 - **Phone** `07337 211695` — a UK mobile, so WhatsApp carries it as `447337211695` and the
   structured data as `+447337211695`. Header, hero, CTA band, footer, structured data, and four
   `wa.me` links.
 - **Email** `info@sidebysidesupportservice.com` — footer and structured data.
+- **Site URL** `https://www.sidebysidesupportservice.com/` — canonical, Open Graph, structured
+  data. Point the apex at the `www` host with a 301 rather than serving both, or the canonical
+  and the served URL will disagree.
 
-Change either in `contact.json` and re-run `npm run contact`, never by hand.
-
-To swap them, edit `contact.json` and run:
+Change any of them in `contact.json` and re-run:
 
 ```sh
 npm run contact    # rewrites index.html
 npm run check      # fails while mock placeholders remain
 ```
 
-The script matches by shape rather than by current value, so it stays usable after the first
-swap, and it is idempotent — running it twice changes nothing.
+Never hand-edit a contact detail in `index.html` — it appears in thirteen places. The script
+matches by shape rather than by current value, so it stays usable after each swap, and it is
+idempotent: running it twice changes nothing.
 
 ### Claims policy — read before editing copy
 
