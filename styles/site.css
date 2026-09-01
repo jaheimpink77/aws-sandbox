@@ -1,0 +1,475 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Side by Side Support Services — page layer.
+
+   Loaded AFTER styles/industry.css (the vendored Industry design system).
+   This file does three things and nothing else:
+
+     1. Re-tones the design system's accent ramps to the brand's navy/green.
+     2. Defines the two colour CONTEXTS — `.dark` (the page) and `.lightbar`
+        (the header) — as scoped token overrides, so every component reads
+        `var(--color-*)` and re-tones automatically. Never fork a component.
+     3. Lays out the page's sections against those tokens.
+
+   House rules from the design system, restated because they are easy to
+   break: radius is 0 everywhere, borders are 1px hairlines, there are no
+   shadows, and no decorative colour beyond navy and green.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Brand ramps ─────────────────────────────────────────────────────
+   Regenerated from the client's logo colours: navy #17386e is the accent,
+   green #3aa845 the second role. Both replace the design system's steel. */
+:root {
+  --color-accent: #17386e;
+  --color-accent-100: #ecf1f9;
+  --color-accent-200: #cfdcef;
+  --color-accent-300: #a9c0de;
+  --color-accent-400: #7d9cc7;
+  --color-accent-500: #5477ab;
+  --color-accent-600: #33568c;
+  --color-accent-700: #1f4174;
+  --color-accent-800: #163055;
+  --color-accent-900: #0f2340;
+
+  --color-accent-2: #3aa845;
+  --color-accent-2-100: #edf8ee;
+  --color-accent-2-200: #cfeed4;
+  --color-accent-2-300: #a5ddaf;
+  --color-accent-2-400: #77c684;
+  --color-accent-2-500: #4eb15e;
+  --color-accent-2-600: #339442;
+  --color-accent-2-700: #277334;
+  --color-accent-2-800: #1c5527;
+  --color-accent-2-900: #133a1b;
+
+  /* Page geometry */
+  --container: 1280px;
+  --gutter: 32px;
+  --header-height: 82px;
+}
+
+/* ── 2. Colour contexts ─────────────────────────────────────────────────
+   Each class redefines the same set of custom properties. Any rule that
+   assumes a context must be scoped to its class, or the dark defaults leak
+   into the header and the buttons there lose contrast. */
+
+.dark {
+  --color-bg: #0f2340;
+  --color-bg-deep: #0b1a30;
+  --color-text: #eaf0f7;
+  --color-muted: rgba(234, 240, 247, 0.72);
+  --color-divider: rgba(234, 240, 247, 0.20);
+  --color-hairline: rgba(255, 255, 255, 0.11);
+  --color-accent: #8fb8e6;      /* links on navy */
+  --color-accent-700: #9fd0a8;  /* kickers, numerals, card-title hover */
+  --color-accent-100: rgba(255, 255, 255, 0.05);
+  --color-accent-200: rgba(255, 255, 255, 0.11);
+  --color-accent-900: #0b1a30;
+  background: #0f2340;
+  color: var(--color-text);
+}
+
+.lightbar {
+  --color-bg: #f2f2f3;
+  --color-text: #1d1f20;
+  --color-muted: rgba(29, 31, 32, 0.62);
+  --color-divider: rgba(29, 31, 32, 0.16);
+  --color-hairline: rgba(29, 31, 32, 0.16);
+  --color-accent: #17386e;
+  --color-accent-700: #1f4174;
+  --color-accent-100: #ecf1f9;
+  background: #f2f2f3;
+  color: var(--color-text);
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: #ffffff; }
+.text-muted { color: var(--color-muted); }
+
+/* ── 3. Base ────────────────────────────────────────────────────────────*/
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+body { margin: 0; }
+h1, h2, h3, h4, h5, h6, p { text-wrap: pretty; }
+
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { color: var(--color-accent-700); }
+
+/* Anchor targets clear the 82px sticky header. */
+[id] { scroll-margin-top: calc(var(--header-height) + 14px); }
+
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section { border-bottom: 1px solid var(--color-divider); }
+.section > .container { padding-block: 72px 80px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; left: var(--gutter); top: -100px; z-index: 60;
+  padding: 10px 16px; background: var(--color-accent-2); color: #0b1a30;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+}
+.skip-link:focus-visible { top: 12px; color: #0b1a30; }
+
+.anchor { display: block; }
+
+/* ── 4. Blueprint corner marks, CSS-only ────────────────────────────────
+   The design system draws its "+" registration marks with four
+   <i class="corner"> children. Same geometry here — an 11px cross whose
+   centre sits on each corner of the border box — painted by one
+   pseudo-element inset by 6px, so framed elements stay clean markup.
+   The system's `.blueprint > .corner` rules are untouched and still work. */
+.blueprint::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  --mark: color-mix(in srgb, var(--color-text) 55%, transparent);
+  background-image:
+    linear-gradient(var(--mark), var(--mark)), linear-gradient(var(--mark), var(--mark)),
+    linear-gradient(var(--mark), var(--mark)), linear-gradient(var(--mark), var(--mark)),
+    linear-gradient(var(--mark), var(--mark)), linear-gradient(var(--mark), var(--mark)),
+    linear-gradient(var(--mark), var(--mark)), linear-gradient(var(--mark), var(--mark));
+  background-size:
+    1px 11px, 11px 1px,   /* top-left    */
+    1px 11px, 11px 1px,   /* top-right   */
+    1px 11px, 11px 1px,   /* bottom-left */
+    1px 11px, 11px 1px;   /* bottom-right*/
+  background-position:
+    left 5px top 0,     left 0 top 5px,
+    right 5px top 0,    right 0 top 5px,
+    left 5px bottom 0,  left 0 bottom 5px,
+    right 5px bottom 0, right 0 bottom 5px;
+  background-repeat: no-repeat;
+}
+/* The frame is a hairline on the dark ground, not the 20% divider. */
+.dark .blueprint { border-color: var(--color-hairline); }
+
+/* The graph-paper fill on the why-us plate: a 40px grid of 1px lines. */
+.plate {
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(234, 240, 247, 0.05) 39px 40px),
+    repeating-linear-gradient(0deg,  transparent 0 39px, rgba(234, 240, 247, 0.05) 39px 40px);
+}
+
+/* ── 5. Buttons ─────────────────────────────────────────────────────────
+   Heights are fixed per placement; the design system supplies the shape
+   (square corners, hairline border, condensed label). */
+.btn { transition: background-color 130ms linear, color 130ms linear; }
+.btn-40 { height: 40px; padding-inline: 18px; }
+.btn-42 { height: 42px; padding-inline: 18px; }
+.btn-46 { height: 46px; padding-inline: 22px; font-size: 15px; }
+.btn-48 { height: 48px; padding-inline: 24px; font-size: 16px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Dark context */
+.dark .btn-primary { background: var(--color-accent-2); border-color: var(--color-accent-2); color: #0b1a30; }
+.dark .btn-primary:hover { background: var(--color-accent-2-400); color: #0b1a30; }
+.dark .btn-primary:active { background: var(--color-accent-2-500); }
+.dark .btn-secondary { color: var(--color-text); border-color: rgba(234, 240, 247, 0.32); }
+.dark .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); color: var(--color-text); }
+.dark .btn-wa { border-color: var(--color-accent-2-400); color: var(--color-accent-2-300); }
+.dark .btn-wa:hover { background: rgba(58, 168, 69, 0.16); color: var(--color-accent-2-300); }
+/* Card titles keep the body tone, not the white reserved for section headings. */
+.dark .card-title { color: var(--color-text); }
+
+/* Light context (the header only) */
+.lightbar .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #f2f2f3; }
+.lightbar .btn-primary:hover { background: var(--color-accent-600); color: #f2f2f3; }
+.lightbar .btn-primary:active { background: var(--color-accent-700); }
+.lightbar .btn-secondary { color: var(--color-text); border-color: var(--color-divider); }
+.lightbar .btn-secondary:hover { background: rgba(29, 31, 32, 0.07); color: var(--color-text); }
+.lightbar .btn-wa { border-color: var(--color-accent-2); color: var(--color-accent-2-700); }
+.lightbar .btn-wa:hover { background: var(--color-accent-2-100); color: var(--color-accent-2-700); }
+.lightbar .btn-wa:active { background: var(--color-accent-2-200); }
+
+/* ── 6. Kickers ─────────────────────────────────────────────────────────*/
+.kicker {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-700);
+}
+
+/* ── 7. Header ──────────────────────────────────────────────────────────*/
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-divider);
+}
+.header-inner {
+  height: var(--header-height);
+  display: flex; align-items: center; gap: 40px;
+}
+.brand { display: flex; align-items: center; gap: 12px; color: var(--color-text); }
+.brand-mark { height: 46px; width: auto; }
+.brand-word { height: 30px; width: auto; }
+
+.site-nav {
+  display: flex; align-items: center; gap: 26px;
+  margin-left: auto; font-size: 14px;
+}
+.site-nav a { color: var(--color-text); }
+.site-nav a:hover { color: var(--color-accent); }
+
+.header-actions { display: flex; align-items: center; gap: 10px; }
+
+.nav-toggle {
+  display: none;
+  margin-left: auto;
+  width: 40px; height: 40px; padding: 0;
+  align-items: center; justify-content: center;
+  background: transparent; color: var(--color-text);
+  border: 1px solid var(--color-divider); border-radius: 0;
+  cursor: pointer;
+}
+.nav-toggle:hover { background: rgba(29, 31, 32, 0.07); }
+.nav-toggle-bars { display: grid; gap: 4px; }
+.nav-toggle-bars span { display: block; width: 17px; height: 1px; background: currentColor; }
+
+/* ── 8. Hero ────────────────────────────────────────────────────────────
+   The navy wash is opaque at the left so the headline stays legible and
+   clears to the right so the photograph reads. */
+.hero {
+  border-bottom: 1px solid var(--color-divider);
+  min-height: 620px;
+  background-image:
+    linear-gradient(90deg, rgba(15, 35, 64, 0.94) 0%, rgba(15, 35, 64, 0.72) 42%, rgba(15, 35, 64, 0.30) 100%),
+    url("../assets/hero-2000.jpg");
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+.hero-copy { padding: 132px 0 140px; max-width: 62ch; }
+.hero h1 {
+  font-size: 68px; line-height: 1.02; letter-spacing: -0.02em;
+  margin: 20px 0 0; max-width: 15ch;
+}
+.hero-body { margin-top: 22px; max-width: 52ch; font-size: 17px; line-height: 1.6; }
+
+/* ── 9. Section headers ─────────────────────────────────────────────────*/
+.section-head {
+  display: flex; flex-wrap: wrap; gap: 40px;
+  align-items: end; justify-content: space-between;
+}
+.section-head h2 { font-size: 40px; margin: 14px 0 0; }
+.section-intro { max-width: 44ch; margin: 0; font-size: 15px; }
+
+/* ── 10. Services ───────────────────────────────────────────────────────
+   Cards are not links — there are no service detail pages. */
+.services-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px; margin-top: 44px;
+}
+.srv {
+  color: var(--color-text);
+  padding: 20px; min-height: 250px; gap: 12px;
+  transition: background-color 130ms linear;
+}
+.srv .card-kicker {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 11px; letter-spacing: 0.12em; color: var(--color-accent-700);
+}
+.srv .card-title { font-size: 21px; margin: 0; transition: color 130ms linear; }
+.srv .card-body { font-size: 13.5px; line-height: 1.5; color: var(--color-muted); opacity: 1; }
+.srv:hover { background: rgba(255, 255, 255, 0.06); }
+.srv:hover .card-title { color: var(--color-accent-700); }
+
+/* ── 11. Why us ─────────────────────────────────────────────────────────
+   One plate, four columns divided by 1px rules — no gap, the rules do the
+   separating. The nth-child rules strip the trailing edge of each row and
+   column, so the same markup re-flows at every breakpoint. */
+.why-title { font-size: 40px; margin: 14px 0 0; max-width: 22ch; }
+.why-grid { margin-top: 44px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.why-cell {
+  padding: 34px 28px;
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+.why-grid > :nth-child(4n) { border-right: 0; }
+.why-grid > :nth-last-child(-n+4) { border-bottom: 0; }
+.why-num {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 44px; line-height: 1; margin: 0;
+  color: var(--color-accent-700);
+}
+.why-cell h3 { font-size: 18px; margin: 14px 0 8px; }
+.why-cell p:last-child { font-size: 14px; margin: 0; }
+
+/* ── 12. Areas ──────────────────────────────────────────────────────────*/
+.areas-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  margin-top: 44px; border-top: 1px solid var(--color-divider);
+}
+.areas-cell {
+  padding: 26px 28px;
+  border-right: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+/* First and last column align their text to the container edges. */
+.areas-grid > :nth-child(4n + 1) { padding-left: 0; }
+.areas-grid > :nth-child(4n) { padding-right: 0; border-right: 0; }
+.areas-grid > :nth-last-child(-n+4) { border-bottom: 0; }
+.areas-cell h3 { font-size: 16px; margin: 0 0 12px; }
+.area-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px; font-size: 14px;
+}
+
+/* ── 13. CTA band ───────────────────────────────────────────────────────*/
+.cta { background: var(--color-bg-deep); color: #ffffff; }
+.cta-inner {
+  padding-block: 72px;
+  display: flex; flex-wrap: wrap; gap: 40px;
+  align-items: center; justify-content: space-between;
+}
+.cta-title { font-size: 42px; margin: 0; max-width: 24ch; }
+.cta-sub { margin: 14px 0 0; font-size: 16px; opacity: 0.85; }
+
+/* ── 14. Footer ─────────────────────────────────────────────────────────*/
+.site-footer { border-top: 1px solid var(--color-divider); }
+.footer-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 48px;
+  padding-block: 56px 28px;
+}
+/* The lockup artwork is navy and disappears on the navy ground. */
+.logo-plate { display: inline-block; background: #ffffff; padding: 16px 20px; }
+.logo-plate img { width: 196px; height: auto; }
+.footer-blurb { margin-top: 16px; max-width: 34ch; font-size: 14px; }
+.footer-heading {
+  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.footer-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 8px; font-size: 14px;
+}
+.footer-list a { color: var(--color-text); }
+.footer-list a:hover { color: var(--color-accent-700); }
+.footer-bar {
+  padding-block: 20px 40px;
+  border-top: 1px solid var(--color-divider);
+  display: flex; flex-wrap: wrap; gap: 16px;
+  justify-content: space-between; font-size: 12px;
+}
+
+/* ══ Responsive ═════════════════════════════════════════════════════════
+   The design is specified at 1280px. Below that the four-column grids step
+   down 4 → 2 → 1, and the header collapses its nav behind a menu button —
+   but keeps Call and WhatsApp visible at every width. They are the entire
+   conversion path and most of this traffic is mobile. */
+
+@media (max-width: 1080px) {
+  .hero h1 { font-size: 56px; }
+}
+
+@media (max-width: 960px) {
+  /* Two wide columns need less floor than four narrow ones. */
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .srv { min-height: 200px; }
+
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-grid > :nth-child(4n) { border-right: 1px solid var(--color-divider); }
+  .why-grid > :nth-last-child(-n+4) { border-bottom: 1px solid var(--color-divider); }
+  .why-grid > :nth-child(2n) { border-right: 0; }
+  .why-grid > :nth-last-child(-n+2) { border-bottom: 0; }
+
+  .areas-grid { grid-template-columns: repeat(2, 1fr); }
+  .areas-grid > :nth-child(4n + 1) { padding-left: 28px; }
+  .areas-grid > :nth-child(4n) { padding-right: 28px; border-right: 1px solid var(--color-divider); }
+  .areas-grid > :nth-last-child(-n+4) { border-bottom: 1px solid var(--color-divider); }
+  .areas-grid > :nth-child(2n + 1) { padding-left: 0; }
+  .areas-grid > :nth-child(2n) { padding-right: 0; border-right: 0; }
+  .areas-grid > :nth-last-child(-n+2) { border-bottom: 0; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+@media (max-width: 900px) {
+  :root { --gutter: 20px; }
+
+  .hero {
+    background-image:
+      linear-gradient(90deg, rgba(15, 35, 64, 0.94) 0%, rgba(15, 35, 64, 0.82) 55%, rgba(15, 35, 64, 0.55) 100%),
+      url("../assets/hero-1200.jpg");
+  }
+
+  /* The nav moves into a panel under the bar; the actions stay in it. */
+  .header-inner { gap: 16px; }
+  .nav-toggle { display: inline-flex; }
+  .site-nav {
+    display: none;
+    position: absolute; left: 0; right: 0; top: 100%;
+    margin-left: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-divider);
+    padding: 6px var(--gutter) 14px;
+  }
+  .site-header.nav-open .site-nav { display: flex; }
+  .site-nav a { padding: 12px 0; border-top: 1px solid var(--color-divider); font-size: 15px; }
+  .header-actions { margin-left: 0; }
+}
+
+/* No JS: the toggle is meaningless, so hide it and keep the links inline. */
+.no-js .nav-toggle { display: none !important; }
+@media (max-width: 900px) {
+  .no-js .site-nav {
+    display: flex;
+    position: static; flex-direction: row; flex-wrap: wrap; gap: 18px;
+    padding: 0; border-bottom: 0; background: none; margin-left: auto;
+  }
+  .no-js .site-nav a { padding: 0; border-top: 0; }
+}
+
+@media (max-width: 720px) {
+  .hero { min-height: 0; }
+  .hero-copy { padding: 72px 0 80px; max-width: none; }
+  .hero h1 { font-size: 40px; max-width: 18ch; }
+  .hero-body { font-size: 16px; }
+
+  .section > .container { padding-block: 56px 60px; }
+  .section-head { gap: 24px; }
+  .section-head h2, .why-title { font-size: 32px; }
+  .services-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+  .srv { min-height: 0; }
+
+  .why-grid { grid-template-columns: 1fr; margin-top: 32px; }
+  .why-grid > :nth-child(2n) { border-right: 0; }
+  .why-grid > :nth-last-child(-n+2) { border-bottom: 1px solid var(--color-divider); }
+  .why-grid > :last-child { border-bottom: 0; }
+  .why-cell { padding: 26px 22px; }
+
+  .areas-grid { grid-template-columns: 1fr; margin-top: 32px; }
+  .areas-grid > * { padding: 22px 0 !important; border-right: 0 !important; }
+  .areas-grid > :nth-last-child(-n+2) { border-bottom: 1px solid var(--color-divider); }
+  .areas-grid > :last-child { border-bottom: 0; }
+
+  .cta-inner { padding-block: 56px; gap: 28px; }
+  .cta-title { font-size: 32px; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; padding-block: 44px 24px; }
+  .footer-bar { padding-block: 18px 32px; }
+}
+
+@media (max-width: 430px) {
+  /* Keep both actions on one line — drop the number, not the button. */
+  .call-number { display: none; }
+  .btn-40 { padding-inline: 14px; }
+  .brand-word { display: none; }
+  .btn-row .btn { flex: 1 1 100%; }
+}

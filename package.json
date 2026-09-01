@@ -1,0 +1,11 @@
+{
+  "name": "side-by-side-support-services",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Marketing site for Side by Side Support Services Company",
+  "scripts": {
+    "serve": "python3 -m http.server 8080",
+    "contact": "node scripts/apply-contact.mjs",
+    "check": "node scripts/apply-contact.mjs --check"
+  }
+}
