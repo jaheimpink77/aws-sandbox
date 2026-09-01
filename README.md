@@ -21,9 +21,9 @@ or serve the folder:
 npm run serve      # http://localhost:8080  (any static server will do)
 ```
 
-Deploying is a file copy: upload the repository contents (minus `scripts/`, `contact.json`,
-`package.json` and the dotfiles) to any static host — S3 + CloudFront, Netlify, Cloudflare
-Pages, nginx. Nothing needs Node at runtime.
+Nothing needs Node at runtime. Deployment is configured for **Vercel** (see below), but the
+site is just files — S3 + CloudFront, Netlify, Cloudflare Pages or nginx would serve it equally
+well, given the same headers.
 
 ## Layout
 
@@ -33,9 +33,77 @@ styles/industry.css        the Industry design system, vendored unmodified
 styles/site.css            brand ramps, the two colour contexts, page layout, breakpoints
 scripts/site.js            the mobile menu; the page's only script
 scripts/apply-contact.mjs  rewrites every contact detail from contact.json
+scripts/csp.mjs            keeps the CSP hashes in vercel.json matching index.html
 contact.json               phone, WhatsApp, email, site URL — the single source of truth
+vercel.json                hosting: headers, caching, the apex redirect
+.vercelignore              repository files that are not part of the site
 assets/                    logos, favicons, hero photograph
 ```
+
+---
+
+## Deploying to Vercel
+
+`vercel.json` configures the project; there is no build step, so Vercel uploads the repository
+and serves it. `.vercelignore` keeps the files that are not part of the site — this README,
+`contact.json`, `package.json` and the two maintenance scripts — out of the deployment.
+
+### First-time setup
+
+Connecting the GitHub repository is the better of the two routes: every push to the default
+branch deploys, and every pull request gets its own preview URL.
+
+1. At [vercel.com/new](https://vercel.com/new), import `jaheimpink77/aws-sandbox`.
+2. Framework preset **Other**. Leave the build command and output directory alone —
+   `vercel.json` sets them.
+3. Deploy, then add the domains under **Settings → Domains**: `www.sidebysidesupportservice.com`
+   as the primary, and the apex `sidebysidesupportservice.com` alongside it. The apex redirect
+   is already declared in `vercel.json`, so do **not** also configure a redirect in the
+   dashboard — one or the other, not both.
+4. Point DNS at Vercel with the records the dashboard shows for each domain.
+
+Or, from a machine logged in to the right Vercel account:
+
+```sh
+npx vercel link          # once, to attach this directory to a project
+npx vercel --prod        # deploy
+```
+
+### Verify the first deploy
+
+The config is worth confirming once against the live URL, since some of it cannot be tested
+locally:
+
+```sh
+curl -sI https://www.sidebysidesupportservice.com/ | grep -i 'content-security\|cache-control'
+curl -sI https://sidebysidesupportservice.com/     | grep -i 'location'   # expect the www URL, 308
+curl -sI https://www.sidebysidesupportservice.com/README.md               # expect 404
+```
+
+Then load the page and check the console is clean — a CSP mistake shows up there and nowhere
+else.
+
+### What the headers do
+
+- **Caching.** `assets/`, `styles/` and `scripts/` get a day in the browser and a week of
+  `stale-while-revalidate`; `/` is always revalidated so copy changes go live immediately.
+  The filenames are *not* content-hashed, which is why none of them is `immutable` — a replaced
+  hero photograph would otherwise stay cached. If you add fingerprinted filenames later, raise
+  that to a year.
+- **Content-Security-Policy.** `default-src 'self'` with Google Fonts allowed, no inline styles,
+  no framing, no forms. The two inline `<script>` blocks — the `no-js` line and the JSON-LD —
+  are allowed by SHA-256 hash, because Chrome applies `script-src` to JSON-LD too and drops it
+  silently otherwise.
+
+  > The hashes are generated, never hand-edited. `apply-contact.mjs` rewrites the JSON-LD, which
+  > changes its hash, so `npm run contact` regenerates them and `npm run check` fails if
+  > `vercel.json` and `index.html` have drifted apart. **If you edit either inline script, run
+  > `npm run contact`.**
+
+- The rest are the standard set: `nosniff`, `DENY` framing, a conservative `Referrer-Policy`,
+  and a `Permissions-Policy` switching off features the page does not use.
+
+HSTS is not set here — Vercel manages it for custom domains.
 
 ---
 
@@ -182,4 +250,5 @@ URL, which the browser dedupes.
 
 If the client wants to avoid a third-party request — a fair ask for a UK business on GDPR
 grounds — self-host the two families in `assets/fonts/` and drop both the `<link>` and the
-`@import`. Nothing else has to change.
+`@import`. The CSP already allows `'self'` for styles and fonts, so nothing there has to change
+either; you can then drop the two `fonts.g*.com` entries from it.

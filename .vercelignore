@@ -1,0 +1,8 @@
+# Repository files that are not part of the site. Everything else — index.html,
+# styles/, assets/ and scripts/site.js — is served.
+README.md
+package.json
+package-lock.json
+contact.json
+scripts/apply-contact.mjs
+scripts/csp.mjs

@@ -5,7 +5,7 @@
   "description": "Marketing site for Side by Side Support Services Company",
   "scripts": {
     "serve": "python3 -m http.server 8080",
-    "contact": "node scripts/apply-contact.mjs",
-    "check": "node scripts/apply-contact.mjs --check"
+    "contact": "node scripts/apply-contact.mjs && node scripts/csp.mjs",
+    "check": "node scripts/apply-contact.mjs --check && node scripts/csp.mjs --check"
   }
 }
