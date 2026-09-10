@@ -2,7 +2,7 @@
 
 A single-page marketing site for Side by Side Support Services Company: commercial and domestic
 cleaning and clearance across London, Essex and the Home Counties. Eight services, an
-accountability story, coverage areas, and a call/WhatsApp conversion band.
+accountability story, and a call/WhatsApp conversion band.
 
 Conversion is by **phone and WhatsApp only**. There is no form, no online booking and no pricing
 on the page — that is a deliberate decision in the design, not an omission.
@@ -121,7 +121,7 @@ Every contact detail is now the client's real one:
 - **Phone** `07337 211695` — a UK mobile, so WhatsApp carries it as `447337211695` and the
   structured data as `+447337211695`. Header, hero, CTA band, footer, structured data, and four
   `wa.me` links.
-- **Email** `info@sidebysidesupportservice.com` — footer and structured data.
+- **Email** `contact@sidebysideservices.org` — footer and structured data.
 - **Site URL** `https://www.sidebysidesupportservice.com/` — canonical, Open Graph, structured
   data. Point the apex at the `www` host with a 301 rather than serving both, or the canonical
   and the served URL will disagree.
@@ -195,7 +195,7 @@ The design is specified at 1280px desktop only; the breakpoints are this impleme
 | Width | Behaviour |
 | --- | --- |
 | ≤ 1080px | Hero H1 steps down to 56px |
-| ≤ 960px | Services, why-us and areas grids go 4 → 2 columns; footer 4 → 2 |
+| ≤ 960px | Services and why-us grids go 4 → 2 columns; footer 4 → 2 |
 | ≤ 900px | Nav collapses behind a menu button; gutters 32 → 20px; smaller hero image |
 | ≤ 720px | Everything single column; hero H1 40px; section padding tightens |
 | ≤ 430px | Wordmark and the phone number inside the Call button drop; hero buttons go full width |
