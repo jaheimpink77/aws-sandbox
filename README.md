@@ -2,7 +2,7 @@
 
 A single-page marketing site for Side by Side Support Services Company: commercial and domestic
 cleaning and clearance across London, Essex and the Home Counties. Eight services, an
-accountability story, coverage areas, and a call/WhatsApp conversion band.
+accountability story, and a call/WhatsApp conversion band.
 
 Conversion is by **phone and WhatsApp only**. There is no form, no online booking and no pricing
 on the page — that is a deliberate decision in the design, not an omission.
@@ -35,6 +35,8 @@ scripts/site.js            the mobile menu; the page's only script
 scripts/apply-contact.mjs  rewrites every contact detail from contact.json
 scripts/csp.mjs            keeps the CSP hashes in vercel.json matching index.html
 contact.json               phone, WhatsApp, email, site URL — the single source of truth
+robots.txt, sitemap.xml    crawler directives; the site URL in both is kept in sync by apply-contact
+favicon.ico                the 32px roundel in an ICO wrapper, for clients that ask for /favicon.ico
 vercel.json                hosting: headers, caching, the apex redirect
 .vercelignore              repository files that are not part of the site
 assets/                    logos, favicons, hero photograph
@@ -121,9 +123,9 @@ Every contact detail is now the client's real one:
 - **Phone** `07337 211695` — a UK mobile, so WhatsApp carries it as `447337211695` and the
   structured data as `+447337211695`. Header, hero, CTA band, footer, structured data, and four
   `wa.me` links.
-- **Email** `info@sidebysidesupportservice.com` — footer and structured data.
+- **Email** `contact@sidebysideservices.org` — footer and structured data.
 - **Site URL** `https://www.sidebysidesupportservice.com/` — canonical, Open Graph, structured
-  data. Point the apex at the `www` host with a 301 rather than serving both, or the canonical
+  data, `robots.txt` and `sitemap.xml`. Point the apex at the `www` host with a 301 rather than serving both, or the canonical
   and the served URL will disagree.
 
 Change any of them in `contact.json` and re-run:
@@ -145,6 +147,39 @@ reintroduce numeric claims — insurance values, response times, guarantee perio
 years trading, review scores — unless the client supplies and approves them in writing. The
 current copy makes qualitative commitments only. This is legal/ASA exposure, not a style
 preference.
+
+---
+
+## Search (SEO)
+
+What the page already does:
+
+- **Title and description** lead with the service and place people search for ("commercial and
+  domestic cleaning", "end of tenancy", "London", "Essex") and fit Google's display widths.
+- **Structured data** is one JSON-LD `@graph`: a `WebSite` and the business as a
+  `ProfessionalService` with logo, image, contact point, the areas served, and all eight services
+  as an `OfferCatalog`. Validate after any edit at
+  [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
+  Every URL in it is rewritten by `npm run contact` — don't hand-edit them.
+- **Open Graph** carries site name, locale and image dimensions, so link previews render
+  without the scraper fetching the image first.
+- **Each service card has an id** (`#end-of-tenancy-cleaning`, `#gutter-cleaning`, …) and the
+  footer links straight to it — these are shareable deep links Google can show as jump links.
+- **`robots.txt` and `sitemap.xml`** at the root; a 180px icon is declared because Google
+  ignores favicons under 48px in results.
+
+What would move rankings further — all need the client, so none is done here:
+
+1. **Google Business Profile.** For "cleaners near me" searches this matters more than anything
+   on the page. Verify the business, use the same name, phone and URL as the page, list the
+   service areas, and collect reviews.
+2. **A business address** (even a registered office). Add it to the JSON-LD as `address` and to
+   the footer; without one the local-business markup is incomplete.
+3. **One page per service** with real, distinct copy. A single page can only rank strongly for a handful of terms.
+4. **Real photography** with descriptive filenames and alt text, and **vector logo** artwork.
+5. **Submit the sitemap** in Google Search Console and Bing Webmaster Tools after launch.
+6. **An FAQ section** answering real customer questions — written with the client, within the
+   claims policy below.
 
 ---
 
@@ -195,7 +230,7 @@ The design is specified at 1280px desktop only; the breakpoints are this impleme
 | Width | Behaviour |
 | --- | --- |
 | ≤ 1080px | Hero H1 steps down to 56px |
-| ≤ 960px | Services, why-us and areas grids go 4 → 2 columns; footer 4 → 2 |
+| ≤ 960px | Services and why-us grids go 4 → 2 columns; footer 4 → 2 |
 | ≤ 900px | Nav collapses behind a menu button; gutters 32 → 20px; smaller hero image |
 | ≤ 720px | Everything single column; hero H1 40px; section padding tightens |
 | ≤ 430px | Wordmark and the phone number inside the Call button drop; hero buttons go full width |

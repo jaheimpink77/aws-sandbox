@@ -310,27 +310,7 @@ a:hover { color: var(--color-accent-700); }
 .why-cell h3 { font-size: 18px; margin: 14px 0 8px; }
 .why-cell p:last-child { font-size: 14px; margin: 0; }
 
-/* ── 12. Areas ──────────────────────────────────────────────────────────*/
-.areas-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  margin-top: 44px; border-top: 1px solid var(--color-divider);
-}
-.areas-cell {
-  padding: 26px 28px;
-  border-right: 1px solid var(--color-divider);
-  border-bottom: 1px solid var(--color-divider);
-}
-/* First and last column align their text to the container edges. */
-.areas-grid > :nth-child(4n + 1) { padding-left: 0; }
-.areas-grid > :nth-child(4n) { padding-right: 0; border-right: 0; }
-.areas-grid > :nth-last-child(-n+4) { border-bottom: 0; }
-.areas-cell h3 { font-size: 16px; margin: 0 0 12px; }
-.area-list {
-  list-style: none; margin: 0; padding: 0;
-  display: flex; flex-direction: column; gap: 6px; font-size: 14px;
-}
-
-/* ── 13. CTA band ───────────────────────────────────────────────────────*/
+/* ── 12. CTA band ───────────────────────────────────────────────────────*/
 .cta { background: var(--color-bg-deep); color: #ffffff; }
 .cta-inner {
   padding-block: 72px;
@@ -340,7 +320,7 @@ a:hover { color: var(--color-accent-700); }
 .cta-title { font-size: 42px; margin: 0; max-width: 24ch; }
 .cta-sub { margin: 14px 0 0; font-size: 16px; opacity: 0.85; }
 
-/* ── 14. Footer ─────────────────────────────────────────────────────────*/
+/* ── 13. Footer ─────────────────────────────────────────────────────────*/
 .site-footer { border-top: 1px solid var(--color-divider); }
 .footer-grid {
   display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 48px;
@@ -387,14 +367,6 @@ a:hover { color: var(--color-accent-700); }
   .why-grid > :nth-last-child(-n+4) { border-bottom: 1px solid var(--color-divider); }
   .why-grid > :nth-child(2n) { border-right: 0; }
   .why-grid > :nth-last-child(-n+2) { border-bottom: 0; }
-
-  .areas-grid { grid-template-columns: repeat(2, 1fr); }
-  .areas-grid > :nth-child(4n + 1) { padding-left: 28px; }
-  .areas-grid > :nth-child(4n) { padding-right: 28px; border-right: 1px solid var(--color-divider); }
-  .areas-grid > :nth-last-child(-n+4) { border-bottom: 1px solid var(--color-divider); }
-  .areas-grid > :nth-child(2n + 1) { padding-left: 0; }
-  .areas-grid > :nth-child(2n) { padding-right: 0; border-right: 0; }
-  .areas-grid > :nth-last-child(-n+2) { border-bottom: 0; }
 
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
 }
@@ -453,11 +425,6 @@ a:hover { color: var(--color-accent-700); }
   .why-grid > :nth-last-child(-n+2) { border-bottom: 1px solid var(--color-divider); }
   .why-grid > :last-child { border-bottom: 0; }
   .why-cell { padding: 26px 22px; }
-
-  .areas-grid { grid-template-columns: 1fr; margin-top: 32px; }
-  .areas-grid > * { padding: 22px 0 !important; border-right: 0 !important; }
-  .areas-grid > :nth-last-child(-n+2) { border-bottom: 1px solid var(--color-divider); }
-  .areas-grid > :last-child { border-bottom: 0; }
 
   .cta-inner { padding-block: 56px; gap: 28px; }
   .cta-title { font-size: 32px; }

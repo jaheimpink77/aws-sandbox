@@ -2,7 +2,8 @@
 /* Rewrite every contact detail in index.html from contact.json.
  *
  * The phone number appears in the header, hero, CTA band, footer and the
- * structured-data block; the WhatsApp number in five links. This script is
+ * structured-data block; the WhatsApp number in five links. The site URL
+ * also lives in robots.txt and sitemap.xml, which are rewritten alongside. This script is
  * the single source of truth the handoff asks for — edit contact.json, run
  * `npm run contact`, commit the diff.
  *
@@ -25,6 +26,7 @@ const digits = c.whatsapp.replace(/\D/g, "");
 const e164 = "+" + digits;
 const telHref = "tel:" + c.phone.replace(/\s/g, "");
 // encodeURIComponent leaves the apostrophe alone; encode it so the href needs no quoting care.
+const origin = c.siteUrl.replace(/\/$/, "");
 const waHref = "https://wa.me/" + digits + "?text=" + encodeURIComponent(c.waPrefill).replace(/'/g, "%27");
 
 /* Values from the design mock. All of them have been replaced with the
@@ -49,7 +51,11 @@ const RULES = [
   [/(<link rel="canonical" href=")[^"]*/g, `$1${c.siteUrl}`],
   [/(<meta property="og:url" content=")[^"]*/g, `$1${c.siteUrl}`],
   // og:image has to be absolute — scrapers do not resolve a relative path.
-  [/(<meta property="og:image" content=")[^"]*/g, `$1${c.siteUrl.replace(/\/$/, "")}/assets/hero-1200.jpg`],
+  [/(<meta property="og:image" content=")[^"]*/g, `$1${origin}/assets/hero-1200.jpg`],
+  // Structured-data node ids and absolute image URLs — same rule as og:image.
+  [/"@id":\s*"[^"#]*#/g, `"@id": "${c.siteUrl}#`],
+  [/"logo":\s*"[^"]*"/g, `"logo": "${origin}/assets/logo-lockup.png"`],
+  [/"image":\s*"[^"]*"/g, `"image": "${origin}/assets/hero-1200.jpg"`],
   // Landline ("020 3918 4151") and mobile ("07337 211695") groupings alike.
   [/\b0\d{2,4}\s\d{3,6}(?:\s\d{3,4})?\b/g, c.phone],
   [/(?<!["/:])\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b/gi, c.email], // the address as displayed
@@ -68,6 +74,20 @@ if (check) {
     process.exit(1);
   }
 } else {
+  /* robots.txt and sitemap.xml carry only the site URL. */
+  for (const [file, re, to] of [
+    ["robots.txt", /^Sitemap:.*$/m, `Sitemap: ${origin}/sitemap.xml`],
+    ["sitemap.xml", /<loc>[^<]*<\/loc>/, `<loc>${c.siteUrl}</loc>`],
+  ]) {
+    const path = join(root, file);
+    const text = readFileSync(path, "utf8");
+    const next = text.replace(re, to);
+    if (next !== text) {
+      writeFileSync(path, next);
+      console.log(`${file} updated.`);
+    }
+  }
+
   let after = before;
   for (const [re, to] of RULES) after = after.replace(re, to);
   if (after === before) {
