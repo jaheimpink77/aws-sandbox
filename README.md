@@ -175,8 +175,7 @@ What would move rankings further — all need the client, so none is done here:
    service areas, and collect reviews.
 2. **A business address** (even a registered office). Add it to the JSON-LD as `address` and to
    the footer; without one the local-business markup is incomplete.
-3. **One page per service** (and later per area, e.g. "End of tenancy cleaning in Chelmsford")
-   with real, distinct copy. A single page can only rank strongly for a handful of terms.
+3. **One page per service** with real, distinct copy. A single page can only rank strongly for a handful of terms.
 4. **Real photography** with descriptive filenames and alt text, and **vector logo** artwork.
 5. **Submit the sitemap** in Google Search Console and Bing Webmaster Tools after launch.
 6. **An FAQ section** answering real customer questions — written with the client, within the
